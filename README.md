@@ -25,11 +25,11 @@ Nothing here connects to or modifies the `mindforge-automation` repository.
    `https://YOUR_USERNAME.github.io/mindforge-privacy/`
    (Each push to `main` redeploys automatically.)
 
-## Before publishing — fill in the contact email
+## Contact email
 
-The email in **both** `index.html` and `privacy.html` is a placeholder:
-`YOUR-CONTACT-EMAIL@EXAMPLE.COM`. Replace it in both files after the owner
-confirms the real address (grep for `YOUR-CONTACT-EMAIL`).
+The contact address is `ahshotsofficial733@gmail.com` (owner-confirmed) —
+linked from the homepage footer and from Privacy Policy §14. To change it
+later, grep for `ahshotsofficial733` in both HTML files.
 
 ## Google verification notes (OAuth branding)
 
