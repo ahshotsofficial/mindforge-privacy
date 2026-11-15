@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy — Mindforge</title>
+  <meta name="description" content="How the Mindforge automation uses Google OAuth, the YouTube Data API (youtube.upload scope), GitHub Actions Secrets, and how data is stored, retained and deleted.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">Mind<span>forge</span></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="policy">
+  <div class="wrap">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Effective date: November 15, 2026 · Applies to the Mindforge automation and this website.</p>
+
+    <h2>1. Overview</h2>
+    <p>
+      Mindforge is a personal, self-hosted automation that creates one
+      psychology explainer video per day and uploads it to the owner's own
+      YouTube channel <strong>as a private video</strong>. This policy explains
+      what data the system processes, which permissions it uses, where data is
+      stored, and how it is retained and deleted.
+    </p>
+    <p>
+      Mindforge is operated by a single individual (the "owner", "we", "us")
+      for their own YouTube channel. It has no other users, collects no
+      audience data, and never publishes content publicly without an explicit
+      manual action by the owner.
+    </p>
+
+    <h2>2. Summary (plain language)</h2>
+    <ul>
+      <li>The system connects to Google using <strong>OAuth 2.0</strong> with exactly one permission: <span class="code">youtube.upload</span>.</li>
+      <li>It uploads <strong>videos only</strong> — always marked <strong>private</strong>. It cannot delete, edit or publish videos, cannot change their visibility, and cannot read your watch history, comments, playlists or channel analytics.</li>
+      <li>Access credentials (an OAuth <strong>refresh token</strong>) are stored exclusively in <strong>GitHub Actions Secrets</strong>, encrypted at rest by GitHub.</li>
+      <li>This website sets <strong>no cookies</strong>, uses <strong>no analytics or tracking</strong>, and collects <strong>no personal data</strong> from visitors.</li>
+    </ul>
+
+    <h2>3. Google OAuth 2.0 and what we access</h2>
+    <p>
+      To upload videos unattended, the daily automation authorizes once (by the
+      owner, interactively) and receives a long-lived <strong>refresh
+      token</strong>. At every subsequent run, that refresh token is exchanged
+      for a short-lived <strong>access token</strong>, which is used to call the
+      official <strong>YouTube Data API v3</strong>.
+    </p>
+    <h3>3.1 The requested permission</h3>
+    <p>
+      The application requests exactly one OAuth scope:
+    </p>
+    <table>
+      <tr><th>Scope</th><th>What it allows</th><th>What it does NOT allow</th></tr>
+      <tr>
+        <td><span class="code">https://www.googleapis.com/auth/youtube.upload</span></td>
+        <td>Uploading videos to the authorized account and setting their metadata (title, description, tags, category, privacy status) at upload time.</td>
+        <td>Editing or deleting existing videos; changing visibility later; reading watch history, comments, likes, subscriptions, playlists or analytics; managing the channel.</td>
+      </tr>
+    </table>
+    <p>
+      The consent screen may display the permission under the name
+      "Manage your YouTube videos". For this automation it is used exclusively
+      to <strong>upload new videos marked private</strong>.
+    </p>
+    <h3>3.2 How the token is used at runtime</h3>
+    <p>
+      During a daily run, the refresh token is exchanged for an access token in
+      memory. Access tokens are short-lived (typically one hour) and are never
+      written to disk, logged, or included in any repository file.
+    </p>
+
+    <h2>4. YouTube Data API usage</h2>
+    <p>The automation calls exactly two API methods:</p>
+    <table>
+      <tr><th>Method</th><th>Purpose</th></tr>
+      <tr>
+        <td><span class="code">videos.insert</span></td>
+        <td>Uploads the rendered MP4 (resumable, chunked upload) with metadata taken from the generated content package. The upload body sets <span class="code">privacyStatus: "private"</span>.</td>
+      </tr>
+      <tr>
+        <td><em>Upload response</em></td>
+        <td>The upload response itself is used to confirm the video was created as private. No additional read scopes are requested.</td>
+      </tr>
+    </table>
+    <p>
+      <strong>Video visibility:</strong> every uploaded video is created with
+      <span class="code">privacyStatus: "private"</span>. The automation has no
+      code path to make a video public or unlisted, and none of the permissions
+      it holds would allow it to change visibility afterwards. Publishing a
+      video is always a manual action performed by the owner in YouTube Studio.
+    </p>
+    <p>
+      <strong>Metadata:</strong> titles, descriptions, tags and the video
+      category are generated automatically from the content package. They do
+      not contain personal data.
+    </p>
+
+    <h2>5. GitHub Actions Secrets (credential storage)</h2>
+    <p>
+      OAuth credentials are stored as three GitHub Actions repository secrets:
+    </p>
+    <ul>
+      <li><span class="code">YOUTUBE_CLIENT_ID</span> — the public OAuth client identifier,</li>
+      <li><span class="code">YOUTUBE_CLIENT_SECRET</span> — the OAuth client secret,</li>
+      <li><span class="code">YOUTUBE_REFRESH_TOKEN</span> — the long-lived refresh token.</li>
+    </ul>
+    <p>
+      GitHub stores repository secrets encrypted at rest and makes them
+      available only to the repository's own workflow runs; they are not
+      visible in logs, are never printed by the automation, and are never
+      committed to the repository's files. The automation runs on GitHub-hosted
+      runners operated under GitHub's infrastructure and privacy terms.
+    </p>
+
+    <h2>6. Data we store outside Google and GitHub</h2>
+    <p>
+      The only record the automation keeps of its own activity is a small
+      ledger file (<span class="code">content/uploads.json</span>) inside the
+      private automation repository, containing for each day:
+    </p>
+    <ul>
+      <li>the content date,</li>
+      <li>the YouTube video ID,</li>
+      <li>the private video URL,</li>
+      <li>the video title, its privacy status, and an upload timestamp.</li>
+    </ul>
+    <p>
+      This ledger exists to prevent duplicate uploads and to give the owner a
+      record of what was uploaded. It contains <strong>no OAuth tokens, no
+      credentials and no personal data</strong>. Generated videos are stored as
+      temporary build artifacts and are not committed to any repository.
+    </p>
+
+    <h2>7. This website</h2>
+    <p>
+      This site (hosted on GitHub Pages) is purely informational. It sets no
+      cookies, loads no third-party scripts, fonts or analytics, and collects
+      no personal information from visitors. Standard, anonymous server logs
+      generated by GitHub's infrastructure are governed by
+      <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" style="color: var(--accent);">GitHub's Privacy Statement</a>.
+    </p>
+
+    <h2>8. What we do NOT do</h2>
+    <ul>
+      <li>We do not sell, rent or share any data with third parties.</li>
+      <li>We do not read or analyze your YouTube account data (history, comments, likes, subscriptions, playlists, analytics).</li>
+      <li>We do not use tokens or video data for advertising, profiling, or training machine-learning models.</li>
+      <li>We do not transfer OAuth credentials to any service other than Google's own OAuth and YouTube API endpoints.</li>
+    </ul>
+
+    <h2>9. Retention and deletion</h2>
+    <ul>
+      <li><strong>OAuth refresh token:</strong> retained in GitHub Actions Secrets for as long as the automation is active. You can revoke access at any time — see §10 — after which the token becomes unusable. Delete the secret from GitHub afterwards (Settings → Secrets and variables → Actions).</li>
+      <li><strong>Access tokens:</strong> exist only in memory during a run (about one hour) and are not stored anywhere.</li>
+      <li><strong>Upload ledger:</strong> kept until you delete it or the repository. It contains no personal data; individual entries can be removed at any time.</li>
+      <li><strong>Uploaded videos:</strong> remain in your YouTube account as private videos until you delete them from YouTube Studio. The automation never deletes videos (and holds no permission to do so).</li>
+      <li><strong>Generated content and rendered videos:</strong> kept in the automation repository/artifacts; rendered videos are stored as GitHub Actions artifacts for 30 days.</li>
+    </ul>
+
+    <h2>10. Revoking access</h2>
+    <p>
+      You can revoke the automation's Google access at any time:
+    </p>
+    <ol>
+      <li>Open your Google Account → <a href="https://myaccount.google.com/permissions" style="color: var(--accent);">Security → Third-party apps with account access</a>.</li>
+      <li>Select the Mindforge OAuth client and remove access. The refresh token becomes invalid immediately.</li>
+      <li>Optionally delete the three <span class="code">YOUTUBE_*</span> secrets from the GitHub repository.</li>
+    </ol>
+
+    <h2>11. Security</h2>
+    <p>
+      Credentials are limited to a single, narrowly-scoped permission, stored
+      encrypted, and used only in short-lived server-side exchanges. The
+      automation repository is private. No secrets are printed to logs or
+      committed to Git. If you ever believe a credential was exposed, revoke it
+      via §10 and generate a new one; revocation is immediate.
+    </p>
+
+    <h2>12. Children's privacy</h2>
+    <p>
+      This automation and website are not directed at children under 13 and do
+      not knowingly collect any personal information from anyone, including
+      children.
+    </p>
+
+    <h2>13. Changes to this policy</h2>
+    <p>
+      If the automation's data handling changes (for example, a new permission
+      or a new data type), this policy will be updated and the effective date
+      above revised. Material changes will be reflected on the
+      <a href="index.html" style="color: var(--accent);">homepage</a>.
+    </p>
+
+    <h2>14. Contact</h2>
+    <p>
+      Questions, data requests or deletion requests can be sent to:
+    </p>
+    <p>
+      <strong>Email:</strong> <a href="mailto:YOUR-CONTACT-EMAIL@EXAMPLE.COM" style="color: var(--accent);">YOUR-CONTACT-EMAIL@EXAMPLE.COM</a>
+      <br><em style="color: var(--muted); font-size: 0.9em;">(placeholder — the owner replaces this with a confirmed contact address before the site is published)</em>
+    </p>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>© 2026 Mindforge · Privacy Policy · Effective November 15, 2026</div>
+    <div><a href="index.html">Back to homepage</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mindforge — Automated Psychology Shorts</title>
+  <meta name="description" content="Mindforge is an automated content pipeline that creates one narrated psychology YouTube Short per day and uploads it privately for review — publishing always stays with the channel owner.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">Mind<span>forge</span></a>
+    <nav>
+      <a href="#how-it-works">How it works</a>
+      <a href="#privacy-first">Privacy</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="badge-row">
+        <span class="badge"><b>Private by default</b> — nothing publishes without you</span>
+        <span class="badge">Runs daily, unattended</span>
+      </div>
+      <h1>One psychology Short a day,<br>made <em>automatically</em>, reviewed by <em>you</em>.</h1>
+      <p class="lead">
+        Mindforge is a personal content pipeline that generates a 60-second
+        psychology explainer every morning, adds natural AI narration, renders a
+        finished vertical video — and uploads it to <strong>your own YouTube
+        channel as a private video</strong> for your review.
+      </p>
+      <a class="btn btn-primary" href="#how-it-works">See how it works</a>
+      <a class="btn" href="privacy.html">Read the Privacy Policy</a>
+    </div>
+  </section>
+
+  <section id="how-it-works">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p class="section-sub">Four steps run automatically on GitHub Actions — no daily manual work.</p>
+      <div class="grid">
+        <div class="card">
+          <span class="step">Step 1</span>
+          <h3>Generate</h3>
+          <p>A content generator picks a fresh psychology topic (never repeating within its cycle) and writes the script: hook, misconception, mechanism, evidence and a call to action.</p>
+        </div>
+        <div class="card">
+          <span class="step">Step 2</span>
+          <h3>Narrate</h3>
+          <p>The script is converted into natural AI speech, synchronized to the five scenes of the video. Scene directions and hashtags are never spoken.</p>
+        </div>
+        <div class="card">
+          <span class="step">Step 3</span>
+          <h3>Render</h3>
+          <p>An animated stickman video is rendered at 1080×1920, H.264, 30 fps, exactly 60 seconds — ready for the YouTube Shorts feed.</p>
+        </div>
+        <div class="card">
+          <span class="step">Step 4</span>
+          <h3>Upload privately</h3>
+          <p>The finished video is uploaded via the official YouTube Data API to the owner's channel with <strong>privacyStatus: private</strong>. You review it and decide if and when it becomes public.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy-first" style="background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="wrap">
+      <h2>Privacy-first by design</h2>
+      <p class="section-sub">Mindforge automates content creation — it never collects audience data and never publishes on its own.</p>
+      <ul class="points">
+        <li><b>Nothing publishes automatically.</b> Every video lands as <strong>private</strong>. Making a video public is always a manual decision by the channel owner.</li>
+        <li><b>Minimum permissions.</b> The pipeline requests exactly one Google permission — <span class="code">youtube.upload</span> — and nothing else. It cannot read your history, comments, subscriptions or channel analytics.</li>
+        <li><b>Credentials stay in GitHub Secrets.</b> OAuth tokens are stored only as encrypted GitHub Actions secrets, used in memory during the daily run, and are never logged, committed or shared.</li>
+        <li><b>No audience data collection.</b> The public website sets no cookies, loads no trackers and collects no analytics.</li>
+      </ul>
+      <div class="notice">
+        Have a question about how Mindforge handles data?
+        See the <a href="privacy.html" style="color: var(--accent);">Privacy Policy</a>
+        or contact the owner at the email listed in the policy footer.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Why "private upload"?</h2>
+      <p class="section-sub">Full automation is useful; full autonomy is risky.</p>
+      <p style="color: var(--muted);">
+        Mindforge can produce a finished Short every day without supervision —
+        but publishing to a public audience is a judgment call that belongs to a
+        human. That's why the final step of the pipeline stops at
+        <strong>private</strong>: the video waits in YouTube Studio for the
+        owner's review. Promoting it to public visibility is a manual click,
+        made only after quality, accuracy and tone have been checked.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      © 2026 Mindforge · Automated psychology Shorts, reviewed by a human.
+    </div>
+    <div>
+      <a href="privacy.html">Privacy Policy</a>
+      · <a href="mailto:YOUR-CONTACT-EMAIL@EXAMPLE.COM">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
